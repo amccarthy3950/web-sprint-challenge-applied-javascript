@@ -1,6 +1,5 @@
-import axios from "axios";
-
-const Card = (article) => {
+import axios from 'axios'
+const Card = (obj) => {
   // TASK 5
   // ---------------------
   // Implement this function, which should return the markup you see below.
@@ -19,37 +18,34 @@ const Card = (article) => {
   //   </div>
   // </div>
   //
-//! create elements  
-const card = document.createElement('card');
-const headline = document.createElement('div');
-const author = document.createElement('div');
-const imgContainer = document.createElement('div');
-const img = document.createElement('img');
+const divCard = document.createElement('div');
+const divHeadline = document.createElement('div');
+const divAuthor = document.createElement('div');
+const divImg = document.createElement('div');
+const imgAuthor = document.createElement('img');
 const span = document.createElement('span');
-//! add classes to elements
-card.classList.add('card');
-headline.classList.add('headline');
-author.classList.add('author');
-imgContainer.classList.add('img-container');
-//! add link to image
-img.src = article.authorPhoto;
-//! add text content
-headline.textContent = article.headline;
-span.textContent = `By ${article.authorName}`;
-//! create hierarchy
-card.appendChild(headline);
-card.appendChild(author);
-author.appendChild(imgContainer);
-imgContainer.appendChild(img);
-author.appendChild(span);
-//! create eventListener 
-card.addEventListener('click', () => {
- console.log(headline);
-})
-//! return 
-return card;
-}
 
+divCard.classList.add('card');
+divHeadline.classList.add('headline');
+divAuthor.classList.add('author');
+divImg.classList.add('img-container');
+
+imgAuthor.src = obj.authorPhoto;
+span.textContent = obj.authorName;
+divHeadline.textContent = obj.headline;
+
+divAuthor.appendChild(span);
+divImg.appendChild(imgAuthor);
+divAuthor.appendChild(divImg);
+divCard.appendChild(divHeadline);
+divCard.appendChild(divAuthor);
+
+divCard.addEventListener('click',() => {
+  console.log(obj.headline)
+})
+
+return divCard
+}
 
 const cardAppender = (selector) => {
   // TASK 6
@@ -60,41 +56,21 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
+const entry = document.querySelector(selector)
+axios
+.get('https://lambda-times-api.herokuapp.com/articles')
+.then(response => {
+  console.log(response.data.articles);
+  for (let key in response.data.articles) {
+    //console.log(key);
+    for (let i = 0; i < response.data.articles[key].length; i++) {
+      const newCard = Card(response.data.articles[key][i]);
+    // console.log(newCard)
+      entry.appendChild(newCard);
 
-  axios
-  .get('https://lambda-times-api.herokuapp.com/articles')
-  .then(res => {
-    const select = document.querySelector(selector);
-    //! receive an object with 5 arrays inside
-    const arrayArticles = res.data.articles;
-    // console.log(arrayArticles); //!check array
-    //! create small arrays from the object
-    const javascript = arrayArticles.javascript;
-    // console.log(javascript) //! check small array
-    const bootstrap = arrayArticles.bootstrap;
-    const technology = arrayArticles.technology;
-    const jquery = arrayArticles.jquery;
-    const node = arrayArticles.node;
-    //! add cards to the page
-    javascript.forEach(item =>{
-      select.appendChild(Card(item))
-    })
-    bootstrap.forEach(item =>{
-      select.appendChild(Card(item))
-    })
-    technology.forEach(item =>{
-      select.appendChild(Card(item))
-    })
-    jquery.forEach(item =>{
-      select.appendChild(Card(item))
-    })
-    node.forEach(item =>{
-      select.appendChild(Card(item))
-    })
-  })
-  .catch(err =>{
-    console.log(err);
-  })
+    }
+  }
+})
 }
 
 export { Card, cardAppender }
