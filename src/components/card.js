@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const Card = (article) => {
   // TASK 5
   // ---------------------
@@ -17,9 +19,41 @@ const Card = (article) => {
   //   </div>
   // </div>
   //
+
+const card = document.createElement('card');
+const headline = document.createElement('div');
+const author = document.createElement('div');
+const imgContainer = document.createElement('div');
+const img = document.createElement('img');
+const span = document.createElement('span');
+
+card.classList.add('card');
+headline.classList.add('headline');
+author.classList.add('author');
+imgContainer.classList.add('img-container');
+
+img.src = article.authorPhoto;
+
+headline.textContent = article.headline;
+span.textContent = `By ${article.authorName}`;
+
+card.appendChild(headline);
+card.appendChild(author);
+author.appendChild(imgContainer);
+imgContainer.appendChild(img);
+author.appendChild(span);
+r 
+card.addEventListener('click', () => {
+ console.log(headline);
+})
+
+return card;
 }
 
 const cardAppender = (selector) => {
+
+
+
   // TASK 6
   // ---------------------
   // Implement this function that takes a css selector as its only argument.
@@ -28,6 +62,36 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
+  axios
+  .get('https://lambda-times-api.herokuapp.com/articles')
+  .then(res => {
+    const select = document.querySelector(selector);
+    const arrayArticles = res.data.articles;
+    const javascript = arrayArticles.javascript;
+    const bootstrap = arrayArticles.bootstrap;
+    const technology = arrayArticles.technology;
+    const jquery = arrayArticles.jquery;
+    const node = arrayArticles.node;
+    
+    javascript.forEach(item =>{
+      select.appendChild(Card(item))
+    })
+    bootstrap.forEach(item =>{
+      select.appendChild(Card(item))
+    })
+    technology.forEach(item =>{
+      select.appendChild(Card(item))
+    })
+    jquery.forEach(item =>{
+      select.appendChild(Card(item))
+    })
+    node.forEach(item =>{
+      select.appendChild(Card(item))
+    })
+  })
+  .catch(err =>{
+    console.log(err);
+  })
 }
 
 export { Card, cardAppender }
