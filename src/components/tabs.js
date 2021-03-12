@@ -18,19 +18,25 @@ const Tabs = (topics) => {
   const topicsMain = document.createElement('div');
   topicsMain.classList.add('topics');
   const array = Array.from(topics.topics);
+  // console.log(array) //! i checked array here
 
-  const div = array.map((topic) => {
-    const topicCreate = document.createElement('div');
-    topicCreate.classList.add('tab');
-    topicCreate.textContent = topic;
-    return topicCreate;
+  //! create div for each string from 'topics'
+   const div = array.map((topic) => {
+   const topicCreate = document.createElement('div');
+   topicCreate.classList.add('tab');
+   topicCreate.textContent = topic;
+   return topicCreate;
   })
+  //! create hierarchy for created divs and main div
    div.forEach(div => {
      topicsMain.appendChild(div);
    })
 
    return topicsMain;
 }
+//!check function
+// const a = ['it','should','work'];
+// console.log(Tabs(a))
 
 const tabsAppender = (selector) => {
   // TASK 4
@@ -50,6 +56,7 @@ const tabsAppender = (selector) => {
   .catch(err => {
     console.log(err)
   })
+
 }
 
 export { Tabs, tabsAppender }
